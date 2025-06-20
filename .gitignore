@@ -1,0 +1,5 @@
+# ... (existing content)
+/vendor
+
+# Docker specific
+docker/mysql/data/ 
