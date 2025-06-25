@@ -10,20 +10,41 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(9);
+        $query = Product::query();
+
+        if ($request->filled('sort')) {
+            $sort = $request->input('sort');
+            if ($sort === 'price_asc') {
+                $query->orderBy('price', 'asc');
+            } elseif ($sort === 'price_desc') {
+                $query->orderBy('price', 'desc');
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(9);
         return view('products.index', compact('products'));
     }
 
     public function search(Request $request)
     {
+        // キーワードが空またはnullの場合は商品一覧ページにリダイレクト
+        if (!$request->has('keyword') || $request->input('keyword') === null || trim($request->input('keyword')) === '') {
+            $redirectParams = [];
+            if ($request->filled('sort')) {
+                $redirectParams['sort'] = $request->input('sort');
+            }
+            return redirect()->route('products.index', $redirectParams);
+        }
+
         $query = Product::query();
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where('name', 'like', "%{$keyword}%");
-        }
+        // キーワードで検索
+        $keyword = trim($request->input('keyword'));
+        $query->where('name', 'like', "%{$keyword}%");
 
         if ($request->filled('sort')) {
             $sort = $request->input('sort');
@@ -70,7 +91,10 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return view('products.show', compact('product'));
+        // 商品の季節名を配列として取得
+        $productSeasonNames = $product->seasons->pluck('name')->toArray();
+        
+        return view('products.show', compact('product', 'productSeasonNames'));
     }
 
     public function edit(Product $product)

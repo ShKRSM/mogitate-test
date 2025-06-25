@@ -53,7 +53,7 @@
                         @foreach(['春', '夏', '秋', '冬'] as $season)
                         <div class="checkbox-wrapper">
                             <input type="checkbox" id="season-{{ $season }}" name="seasons[]" value="{{ $season }}"
-                                {{ in_array($season, $product->seasons ?? []) ? 'checked' : '' }}>
+                                {{ in_array($season, $productSeasonNames ?? []) ? 'checked' : '' }}>
                             <label for="season-{{ $season }}">{{ $season }}</label>
                         </div>
                         @endforeach

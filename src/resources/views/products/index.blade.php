@@ -14,8 +14,13 @@
     <div class="products-main-content">
         <aside class="products-sidebar">
             <form method="GET" action="{{ route('products.search') }}" class="products-controls-form">
-                <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="商品名で検索" class="search-input">
-                <button type="submit" class="search-btn">検索</button>
+                <div class="search-container">
+                    <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="商品名で検索" class="search-input">
+                    <button type="submit" class="search-btn">検索</button>
+                    @if(request('keyword'))
+                        <a href="{{ route('products.search', ['sort' => request('sort')]) }}" class="clear-search-btn">クリア</a>
+                    @endif
+                </div>
                 
                 <label class="sort-label">価格で並べ替え</label>
                 <select name="sort" class="products-sort-select" onchange="this.form.submit()">
@@ -31,6 +36,20 @@
         </aside>
         
         <main class="products-grid-wrapper">
+            {{-- 並び替え条件のタグ表示 --}}
+            @if(request('sort'))
+                <div class="sort-tags">
+                    <span class="sort-tag">
+                        @if(request('sort') == 'price_asc')
+                            価格の安い順
+                        @elseif(request('sort') == 'price_desc')
+                            価格の高い順
+                        @endif
+                        <a href="{{ route('products.search', ['keyword' => request('keyword')]) }}" class="sort-tag-close">&times;</a>
+                    </span>
+                </div>
+            @endif
+            
             <div class="products-container">
                 @foreach($products as $product)
                 <a href="{{ route('products.show', $product) }}" class="product-card-link">
