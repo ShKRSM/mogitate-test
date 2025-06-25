@@ -23,6 +23,12 @@
     ```bash
     cp src/.env.example src/.env
     ```
+    
+    **注意**: `.env`ファイルのDB設定は以下の通りです：
+    - `DB_HOST=mysql` (Dockerサービス名)
+    - `DB_DATABASE=laravel_db`
+    - `DB_USERNAME=laravel_user`
+    - `DB_PASSWORD=laravel_pass`
 
 5.  **アプリケーションキーの生成**
     ```bash
@@ -38,6 +44,47 @@
    ```bash
    docker-compose exec php php /var/www/artisan storage:link
    ```
+
+## 開発時の注意事項
+
+### データベースの初期化
+開発時にデータベースを完全にリセットしたい場合：
+
+```bash
+# データを削除してAUTO_INCREMENTをリセット
+docker-compose exec mysql mysql -u laravel_user -plaravel_pass -e "USE laravel_db; DELETE FROM seasons; ALTER TABLE seasons AUTO_INCREMENT = 1;"
+
+# シーダーを再実行
+docker-compose exec php bash -c "php artisan db:seed --class='Database\\Seeders\\SeasonSeeder'"
+```
+
+**⚠️ 注意**: このコマンドは本番環境や他の開発者のデータベースには実行しないでください。
+
+### 外部キー制約のあるテーブルの初期化
+`product_season`テーブルなど、外部キー制約があるテーブルを初期化する場合：
+
+```bash
+# 関連テーブルも一緒に削除
+docker-compose exec mysql mysql -u laravel_user -plaravel_pass -e "USE laravel_db; DELETE FROM product_season; DELETE FROM seasons; ALTER TABLE seasons AUTO_INCREMENT = 1;"
+```
+
+### 新しいクラスを追加した場合
+新しいモデルやシーダーを追加した場合は、オートローダーを再生成してください：
+
+```bash
+docker-compose exec php composer dump-autoload
+```
+
+### Dockerボリュームの管理
+データベースを完全にリセットしたい場合（開発時のみ）：
+
+```bash
+# コンテナとボリュームを削除
+docker-compose down -v
+
+# 再起動
+docker-compose up -d
+```
 
 ## 使用技術（実行環境）
 -   **PHP**: 7.4.9
