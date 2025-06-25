@@ -216,37 +216,52 @@
 .products-controls-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
-.search-container {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+.products-search-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 2px;
+    margin-top: 8px;
 }
 
-.products-controls-form .search-input,
-.products-controls-form .products-sort-select {
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    flex: 1;
+.search-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 24px;
+    border: 1.5px solid #f0f0f0;
+    background: #fafafa;
+    font-size: 16px;
+    color: #222;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.2s;
+}
+.search-input:focus {
+    border: 1.5px solid #ffc107;
+    background: #fffbe6;
 }
 
-.products-controls-form .search-btn {
-    padding: 10px 16px;
-    background-color: #007bff;
-    color: white;
+.search-btn {
+    width: 100%;
+    padding: 16px 0;
+    border-radius: 12px;
+    background: #ffc107;
+    color: #222;
+    font-size: 18px;
+    font-weight: bold;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
+    margin-top: 2px;
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s;
 }
-
-.products-controls-form .search-btn:hover {
-    background-color: #0056b3;
+.search-btn:hover {
+    background: #ffb300;
+    color: #111;
 }
 
 .clear-search-btn {
@@ -366,4 +381,58 @@
     background-color: #1565c0;
     color: white;
     text-decoration: none;
+}
+
+.sort-tag-box {
+    margin-top: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sort-tag-yellow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #fff;
+    color: #222;
+    border: 2px solid #ffc107;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+.sort-tag-close-yellow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    color: #ffc107;
+    border: 1.5px solid #ffc107;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sort-tag-close-yellow:hover {
+    background: #ffc107;
+    color: #fff;
+    text-decoration: none;
+    border-color: #ffc107;
+}
+
+.sort-divider {
+    width: 100%;
+    height: 2px;
+    background: #f0f0f0;
+    border-radius: 1px;
+    margin: 18px 0 0 0;
 }

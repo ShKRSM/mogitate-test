@@ -25,7 +25,7 @@ class ProductController extends Controller
             $query->latest();
         }
 
-        $products = $query->paginate(9);
+        $products = $query->paginate(6);
         return view('products.index', compact('products'));
     }
 
@@ -55,7 +55,7 @@ class ProductController extends Controller
             }
         }
 
-        $products = $query->latest()->paginate(9);
+        $products = $query->latest()->paginate(6);
 
         return view('products.index', compact('products'));
     }
@@ -124,7 +124,7 @@ class ProductController extends Controller
         $seasons = $request->input('seasons', []);
         $product->seasons()->sync($this->getSeasonIds($seasons));
 
-        return redirect()->route('products.show', $product)->with('success', '商品情報を更新しました。');
+        return redirect()->route('products.index')->with('success', '商品情報を更新しました。');
     }
 
     public function destroy(Product $product)
