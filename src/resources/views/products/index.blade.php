@@ -5,51 +5,48 @@
 <div class="products-page-container">
     <div class="products-page-header">
         <h1>商品一覧</h1>
+        @if(Route::currentRouteName() !== 'products.search')
         <a href="{{ route('products.create') }}" class="add-product-btn">
             <span class="add-product-icon">+</span>
             商品を追加
         </a>
+        @endif
     </div>
 
     <div class="products-main-content">
         <aside class="products-sidebar">
             <form method="GET" action="{{ route('products.search') }}" class="products-controls-form">
-                <div class="search-container">
-                    <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="商品名で検索" class="search-input">
-                    <button type="submit" class="search-btn">検索</button>
-                    @if(request('keyword'))
-                        <a href="{{ route('products.search', ['sort' => request('sort')]) }}" class="clear-search-btn">クリア</a>
-                    @endif
-                </div>
-                
-                <label class="sort-label">価格で並べ替え</label>
-                <select name="sort" class="products-sort-select" onchange="this.form.submit()">
-                    <option value="">並び替え</option>
-                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>価格の安い順</option>
-                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>価格の高い順</option>
-                </select>
-                {{-- Keep keyword when sorting --}}
+                <label class="products-search-label" for="search-keyword">商品名で検索</label>
+                <input type="text" id="search-keyword" name="keyword" value="{{ request('keyword') }}" placeholder="商品名で検索" class="search-input">
+                <button type="submit" class="search-btn">検索</button>
                 @if(request('keyword'))
-                    <input type="hidden" name="keyword" value="{{ request('keyword') }}">
+                    <a href="{{ route('products.search', ['sort' => request('sort')]) }}" class="clear-search-btn">クリア</a>
                 @endif
+                <label class="sort-label">価格順で表示</label>
+                <select name="sort" class="products-sort-select" onchange="this.form.submit()">
+                    <option value="">価格で並べ替え</option>
+                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>低い順に表示</option>
+                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>高い順に表示</option>
+                </select>
             </form>
+            @if(request('sort'))
+                <div class="sort-tag-box">
+                    <span class="sort-tag-yellow">
+                        @if(request('sort') == 'price_asc')
+                            低い順に表示
+                        @elseif(request('sort') == 'price_desc')
+                            高い順に表示
+                        @endif
+                        <a href="{{ route('products.search', ['keyword' => request('keyword')]) }}" class="sort-tag-close-yellow" aria-label="並び替えリセット">&times;</a>
+                    </span>
+                </div>
+                <div class="sort-divider"></div>
+            @else
+                <div class="sort-divider"></div>
+            @endif
         </aside>
         
         <main class="products-grid-wrapper">
-            {{-- 並び替え条件のタグ表示 --}}
-            @if(request('sort'))
-                <div class="sort-tags">
-                    <span class="sort-tag">
-                        @if(request('sort') == 'price_asc')
-                            価格の安い順
-                        @elseif(request('sort') == 'price_desc')
-                            価格の高い順
-                        @endif
-                        <a href="{{ route('products.search', ['keyword' => request('keyword')]) }}" class="sort-tag-close">&times;</a>
-                    </span>
-                </div>
-            @endif
-            
             <div class="products-container">
                 @foreach($products as $product)
                 <a href="{{ route('products.show', $product) }}" class="product-card-link">
